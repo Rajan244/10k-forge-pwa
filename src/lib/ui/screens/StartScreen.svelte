@@ -316,9 +316,9 @@
               </span>
               
               {#if hasTutorial(item)}
-                <div class="ml-1" on:click|stopPropagation={() => selectedGuide = guideFor(item)}>
+                <button type="button" class="ml-1" on:click|stopPropagation={() => selectedGuide = guideFor(item)}>
                   <Info class="w-4 h-4 text-primary" />
-                </div>
+                </button>
               {/if}
             </button>
           {/each}

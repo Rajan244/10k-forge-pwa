@@ -3,18 +3,19 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: '/10k-forge-pwa/',
   plugins: [
     svelte(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.png', 'icons/*.svg'],
       manifest: {
-        id: '/?source=pwa',
+        id: '/10k-forge-pwa/?source=pwa',
         name: '10K Forge - Race Prep Coach',
         short_name: '10K Forge',
         description: 'Offline 10K training coach with guided HIIT, run logs, dashboards, and local progress tracking.',
-        start_url: '/?source=pwa',
-        scope: '/',
+        start_url: '/10k-forge-pwa/?source=pwa',
+        scope: '/10k-forge-pwa/',
         display: 'standalone',
         display_override: ['standalone'],
         background_color: '#07080d',
