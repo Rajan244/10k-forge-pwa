@@ -25,7 +25,7 @@
   }
 </script>
 
-<div class="min-h-screen bg-background pb-20">
+<div class="min-h-screen bg-background pb-20 safe-area-top">
   <main class="max-w-lg mx-auto px-4">
     {#if $activeTab === 'home'}<HomeScreen onStart={() => go('start')} />{/if}
     {#if $activeTab === 'start'}<StartScreen />{/if}

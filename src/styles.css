@@ -110,9 +110,12 @@
   box-shadow: 0 0 20px rgba(33, 196, 93, 0.3), 0 0 60px rgba(33, 196, 93, 0.1);
 }
 
-/* Safe area for PWA bottom nav */
+/* Safe area for PWA */
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 /* SVG timer animation */
