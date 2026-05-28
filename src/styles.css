@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-background: oklch(14% 0.02 240);
+  --color-foreground: oklch(93% 0.01 220);
+
+  --color-card: oklch(17% 0.02 240);
+  --color-card-foreground: oklch(93% 0.01 220);
+
+  --color-popover: oklch(17% 0.02 240);
+  --color-popover-foreground: oklch(93% 0.01 220);
+
+  --color-primary: oklch(65% 0.18 210);
+  --color-primary-foreground: oklch(14% 0.02 240);
+
+  --color-secondary: oklch(22% 0.02 240);
+  --color-secondary-foreground: oklch(85% 0.01 220);
+
+  --color-muted: oklch(20% 0.02 240);
+  --color-muted-foreground: oklch(52% 0.02 230);
+
+  --color-accent: oklch(62% 0.18 145);
+  --color-accent-foreground: oklch(14% 0.02 240);
+
+  --color-destructive: oklch(52% 0.22 25);
+  --color-destructive-foreground: oklch(98% 0 0);
+
+  --color-border: oklch(24% 0.02 240);
+  --color-input: oklch(24% 0.02 240);
+  --color-ring: oklch(65% 0.18 210);
+
+  --radius: 0.75rem;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+/* CSS custom properties for use in inline styles */
+:root {
+  --background: 220 20% 4%;
+  --foreground: 210 20% 95%;
+  --card: 220 18% 8%;
+  --card-foreground: 210 20% 95%;
+  --primary: 199 89% 48%;
+  --primary-foreground: 220 20% 4%;
+  --secondary: 220 14% 14%;
+  --secondary-foreground: 210 20% 85%;
+  --muted: 220 14% 12%;
+  --muted-foreground: 215 14% 50%;
+  --accent: 142 71% 45%;
+  --accent-foreground: 220 20% 4%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 14% 16%;
+  --input: 220 14% 16%;
+  --ring: 199 89% 48%;
+  --radius: 0.75rem;
+
+  /* Chart colors */
+  --chart-1: 199 89% 48%;
+  --chart-2: 142 71% 45%;
+  --chart-3: 45 93% 47%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+    box-sizing: border-box;
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: linear-gradient(135deg, #15181ecc, #0d0e1299);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(220 14% 18% / 0.5);
+}
+
+/* Glow effects for CTA buttons */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(13, 162, 231, 0.3), 0 0 60px rgba(13, 162, 231, 0.1);
+}
+.glow-accent {
+  box-shadow: 0 0 20px rgba(33, 196, 93, 0.3), 0 0 60px rgba(33, 196, 93, 0.1);
+}
+
+/* Safe area for PWA bottom nav */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* SVG timer animation */
+.timer-circle {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+/* Staggered entrance animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.3s ease-out both;
+}
+
+/* Stagger children */
+.stagger-children > * {
+  animation: fadeInUp 0.4s ease-out both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+
+/* Form inputs with glass styling */
+.input-glass {
+  background-color: hsl(var(--muted) / 0.5);
+  border-color: hsl(var(--border));
+}
+
+/* Active nav indicator */
+.nav-active-bg {
+  background-color: hsl(var(--primary) / 0.1);
+}
