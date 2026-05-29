@@ -56,6 +56,15 @@
     appData.set(generatePostRacePlan(get(appData), newTargetDate, newTargetLabel));
     message = 'New target plan created. Your old logs are kept.';
   }
+
+  function refreshApp() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(r => r.update());
+      });
+    }
+    setTimeout(() => window.location.reload(), 500);
+  }
 </script>
 
 <div class="py-6 space-y-6">
@@ -212,10 +221,14 @@
     
     <div class="border-t border-border/50 border-dashed my-2"></div>
     
-    <label class="space-y-1.5 block">
+    <label class="space-y-1.5 block mb-4">
       <span class="text-xs font-medium text-muted-foreground">Import Backup JSON</span>
       <textarea class="input-glass flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary" rows="3" bind:value={importText}></textarea>
     </label>
+
+    <button class="flex w-full items-center justify-center rounded-xl bg-primary/10 border border-primary/20 px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 active:scale-[0.98] mb-3" on:click={refreshApp}>
+      Check for App Updates
+    </button>
     
     <div class="flex gap-3">
       <button class="flex-1 flex items-center justify-center rounded-xl bg-secondary/50 border border-border/50 px-4 py-3 text-sm font-semibold transition-colors hover:bg-secondary active:scale-[0.98]" on:click={importBackup}>
