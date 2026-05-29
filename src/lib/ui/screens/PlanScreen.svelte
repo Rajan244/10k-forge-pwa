@@ -1,7 +1,7 @@
 <script lang="ts">
   import { appData } from '../stores/appStore';
   import { getSession, isCompleted, daysUntil } from '../../application/appService';
-  import { CheckCircle2, Footprints, Heart, Zap, CalendarDays, Clock } from 'lucide-svelte';
+  import { CheckCircle2, Footprints, Heart, Zap, CalendarDays, Clock, ChevronDown, ChevronUp } from 'lucide-svelte';
   import type { SessionType } from '../../domain/types';
 
   $: raceDays = daysUntil($appData.profile.raceDate);
@@ -18,6 +18,8 @@
     if (type === 'rest') return Heart;
     return Zap;
   }
+
+  let expandedDayIndex: number | null = null;
 </script>
 
 <div class="py-6 space-y-6">
@@ -47,36 +49,77 @@
       {@const isPast = new Date(day.date) < new Date(new Date().toISOString().split('T')[0])}
       
       <div 
-        class="glass-card rounded-xl p-4 flex items-center gap-4 transition-all animate-fade-in-up {isToday ? 'ring-1 ring-primary/40 bg-primary/5' : isPast && !done ? 'opacity-50' : done ? 'opacity-60 bg-muted/20' : ''}"
+        class="glass-card rounded-xl p-4 flex flex-col transition-all animate-fade-in-up cursor-pointer {isToday ? 'ring-1 ring-primary/40 bg-primary/5' : isPast && !done ? 'opacity-50' : done ? 'opacity-60 bg-muted/20' : ''}"
         style="animation-delay: {100 + Math.min(i * 30, 800)}ms;"
+        on:click={() => expandedDayIndex = expandedDayIndex === i ? null : i}
+        on:keydown={(e) => e.key === 'Enter' && (expandedDayIndex = expandedDayIndex === i ? null : i)}
+        tabindex="0"
+        role="button"
       >
-        <div class="w-10 h-10 shrink-0 flex items-center justify-center text-xl">
-          {#if done}
-            <CheckCircle2 class="w-6 h-6 text-accent" />
-          {:else if session.type === 'run'}
-            <Footprints class="w-6 h-6 text-primary" />
-          {:else if session.type === 'rest'}
-            <Heart class="w-6 h-6 text-destructive" />
-          {:else}
-            <Zap class="w-6 h-6 text-yellow-500" />
-          {/if}
-        </div>
-        
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2">
-            <p class="text-sm font-bold text-foreground">{day.dayName}</p>
-            {#if isToday}
-              <span class="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded">Today</span>
+        <div class="flex items-center gap-4 w-full">
+          <div class="w-10 h-10 shrink-0 flex items-center justify-center text-xl">
+            {#if done}
+              <CheckCircle2 class="w-6 h-6 text-accent" />
+            {:else if session.type === 'run'}
+              <Footprints class="w-6 h-6 text-primary" />
+            {:else if session.type === 'rest'}
+              <Heart class="w-6 h-6 text-destructive" />
+            {:else}
+              <Zap class="w-6 h-6 text-yellow-500" />
             {/if}
           </div>
-          <p class="text-sm text-muted-foreground truncate">{session.name}</p>
-          <p class="text-[10px] text-muted-foreground/70 mt-0.5">{day.date} · {session.intensity}</p>
+          
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <p class="text-sm font-bold text-foreground">{day.dayName}</p>
+              {#if isToday}
+                <span class="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded">Today</span>
+              {/if}
+            </div>
+            <p class="text-sm text-muted-foreground truncate">{session.name}</p>
+            <p class="text-[10px] text-muted-foreground/70 mt-0.5">{day.date} · {session.intensity}</p>
+          </div>
+          
+          <div class="flex flex-col items-end gap-1">
+            {#if session.targetDurationMinutes > 0}
+              <div class="flex items-center gap-1 text-xs text-muted-foreground font-medium">
+                <Clock class="w-3.5 h-3.5" />
+                <span>{session.targetDurationMinutes}m</span>
+              </div>
+            {/if}
+            <div class="text-muted-foreground p-1">
+              {#if expandedDayIndex === i}
+                <ChevronUp class="w-4 h-4" />
+              {:else}
+                <ChevronDown class="w-4 h-4" />
+              {/if}
+            </div>
+          </div>
         </div>
-        
-        {#if session.targetDurationMinutes > 0}
-          <div class="flex items-center gap-1 text-xs text-muted-foreground font-medium">
-            <Clock class="w-3.5 h-3.5" />
-            <span>{session.targetDurationMinutes}m</span>
+
+        {#if expandedDayIndex === i && session.blocks && session.blocks.length > 0}
+          <div class="mt-4 pt-4 border-t border-border/50 text-sm space-y-4 cursor-default" on:click|stopPropagation>
+            {#each session.blocks as block}
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-primary mb-2">
+                  {block.type} {#if block.rounds && block.rounds > 1}<span class="text-muted-foreground lowercase">({block.rounds} rounds)</span>{/if}
+                </p>
+                <ul class="space-y-2">
+                  {#each block.items as item}
+                    {@const ex = $appData.exercises.find(e => e.id === item.exerciseId)}
+                    <li class="flex items-start gap-2 text-foreground/80">
+                      <span class="w-1 h-1 rounded-full bg-foreground/30 shrink-0 mt-2"></span>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm">{ex?.name || item.exerciseId}</p>
+                      </div>
+                      {#if item.durationSeconds}
+                        <span class="text-xs font-mono text-muted-foreground ml-2 shrink-0">{item.durationSeconds}s</span>
+                      {/if}
+                    </li>
+                  {/each}
+                </ul>
+              </div>
+            {/each}
           </div>
         {/if}
       </div>

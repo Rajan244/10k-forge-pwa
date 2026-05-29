@@ -117,27 +117,29 @@
   <!-- This Week Tracker -->
   {#if weekDays.length > 0}
     <div class="glass-card rounded-2xl p-5 animate-fade-in-up" style="animation-delay: 150ms;">
-      <p class="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-3">This Week</p>
-      <div class="flex items-center justify-between gap-1">
+      <p class="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-4">This Week</p>
+      <div class="flex items-center justify-between gap-1.5">
         {#each weekDays as day}
           {@const isDone = !!$appData.sessionLogs[day.sessionId]}
           {@const isToday = day.date === $todayPlan.date}
-          <div class="flex flex-col items-center gap-1.5">
-            <span class="text-[10px] text-muted-foreground font-medium">{day.dayName.slice(0, 2)}</span>
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center transition-all {isDone ? 'bg-accent/20 text-accent' : isToday ? 'bg-primary/20 text-primary ring-1 ring-primary/40' : 'bg-muted/50 text-muted-foreground border border-border/50'}">
+          <div class="flex flex-col items-center flex-1 gap-2 py-3 rounded-full transition-all {isDone ? 'bg-accent/15 text-accent' : isToday ? 'bg-primary/15 text-primary ring-1 ring-primary/40' : 'bg-secondary/40 text-muted-foreground border border-border/30'}">
+            <span class="text-[9px] font-bold uppercase tracking-widest">{day.dayName.slice(0, 3)}</span>
+            <div class="w-6 h-6 rounded-full flex items-center justify-center">
               {#if isDone}
-                <CheckCircle2 class="w-4 h-4" />
+                <CheckCircle2 class="w-5 h-5 drop-shadow-md" />
+              {:else if isToday}
+                <div class="w-2 h-2 rounded-full bg-primary glow-primary animate-pulse"></div>
               {:else}
-                <div class="w-1.5 h-1.5 rounded-full bg-current opacity-50"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-muted-foreground/30"></div>
               {/if}
             </div>
           </div>
         {/each}
       </div>
-      <div class="mt-4 flex items-center justify-between text-sm">
-        <span class="text-muted-foreground">{doneThisWeek} of {weekDays.length} sessions</span>
-        <div class="h-1.5 flex-1 mx-3 bg-muted rounded-full overflow-hidden">
-          <div class="h-full bg-accent rounded-full transition-all duration-500" style="width: {(doneThisWeek / Math.max(1, weekDays.length)) * 100}%"></div>
+      <div class="mt-5 flex items-center justify-between text-sm">
+        <span class="text-muted-foreground font-medium">{doneThisWeek} of {weekDays.length} sessions</span>
+        <div class="h-2 flex-1 mx-4 bg-muted/60 rounded-full overflow-hidden shadow-inner">
+          <div class="h-full bg-gradient-to-r from-accent/80 to-accent rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(33,196,93,0.3)]" style="width: {(doneThisWeek / Math.max(1, weekDays.length)) * 100}%"></div>
         </div>
       </div>
     </div>

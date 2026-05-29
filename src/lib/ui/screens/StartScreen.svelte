@@ -143,6 +143,7 @@
 
   function countdown(seconds: number) {
     remaining = seconds;
+    const thirtyPercentMark = Math.ceil(seconds * 0.3);
     skipTrigger = false;
     resetTrigger = false;
     return new Promise<void>((resolve) => {
@@ -156,7 +157,9 @@
         }
         if (!isPaused) {
           remaining -= 1;
-          if (remaining === 3 || remaining === 2 || remaining === 1) {
+          if (remaining === thirtyPercentMark && remaining > 3) {
+            speak(remaining + ' seconds');
+          } else if (remaining === 3 || remaining === 2 || remaining === 1) {
             speak(remaining.toString());
           }
         }
